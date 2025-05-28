@@ -1,31 +1,55 @@
 let history = { rock: 0, paper: 0, scissors: 0 };
 let score = { user: 0, ai: 0, draw: 0 };
 
-const emojis = {
-  rock: '🪨',
-  paper: '📄',
-  scissors: '✂️'
+const imageMap = {
+  rock: "batu.png",
+  paper: "kertas.png",
+  scissors: "gunting.png"
 };
 
 function play(userChoice) {
-  updateHistory(userChoice);
-  let aiChoice = predictUserMove();
-  let result = determineWinner(userChoice, aiChoice);
+  // Tampilkan default (batu) dan animasi shake
+  showChoice('left-hand', 'rock');
+  showChoice('right-hand', 'rock');
+  animateHands();
 
-  // Update score
-  if (result === "You Win!") score.user++;
-  else if (result === "AI Wins!") score.ai++;
-  else score.draw++;
+  setTimeout(() => {
+    updateHistory(userChoice);
+    const aiChoice = predictUserMove();
+    const result = determineWinner(userChoice, aiChoice);
 
-  // Update choices with animation
-  showChoice('user-choice', emojis[userChoice]);
-  showChoice('ai-choice', emojis[aiChoice]);
+    // Update skor
+    if (result === "You Win!") score.user++;
+    else if (result === "AI Wins!") score.ai++;
+    else score.draw++;
 
-  // Update result text
-  document.getElementById("result").innerText =
-    `You chose ${userChoice} | AI chose ${aiChoice} → ${result}`;
-  document.getElementById("scoreboard").innerText =
-    `You: ${score.user} | AI: ${score.ai} | Draw: ${score.draw}`;
+    // Tampilkan pilihan final
+    showChoice('left-hand', userChoice);
+    showChoice('right-hand', aiChoice);
+
+    // Tampilkan hasil
+    document.getElementById("user-score").innerText = score.user;
+    document.getElementById("ai-score").innerText = score.ai;
+    document.getElementById("result").innerText =
+      `Kamu memilih ${userChoice}, AI memilih ${aiChoice} → ${result}`;
+  }, 600); // Delay setelah shake
+}
+
+function showChoice(id, choice) {
+  document.getElementById(id).src = imageMap[choice];
+}
+
+function animateHands() {
+  const left = document.getElementById('left-hand');
+  const right = document.getElementById('right-hand');
+
+  left.classList.add('shake-left');
+  right.classList.add('shake-right');
+
+  setTimeout(() => {
+    left.classList.remove('shake-left');
+    right.classList.remove('shake-right');
+  }, 500);
 }
 
 function updateHistory(choice) {
@@ -33,7 +57,7 @@ function updateHistory(choice) {
 }
 
 function predictUserMove() {
-  let max = Math.max(history.rock, history.paper, history.scissors);
+  const max = Math.max(history.rock, history.paper, history.scissors);
   if (max === 0) return randomChoice();
   if (history.rock === max) return "paper";
   if (history.paper === max) return "scissors";
@@ -41,8 +65,8 @@ function predictUserMove() {
 }
 
 function randomChoice() {
-  const options = ["rock", "paper", "scissors"];
-  return options[Math.floor(Math.random() * 3)];
+  const choices = ["rock", "paper", "scissors"];
+  return choices[Math.floor(Math.random() * choices.length)];
 }
 
 function determineWinner(user, ai) {
@@ -53,12 +77,4 @@ function determineWinner(user, ai) {
     (user === "scissors" && ai === "paper")
   ) return "You Win!";
   return "AI Wins!";
-}
-
-function showChoice(id, emoji) {
-  const el = document.getElementById(id);
-  el.classList.remove("animate");
-  void el.offsetWidth; // trigger reflow to restart animation
-  el.innerText = emoji;
-  el.classList.add("animate");
 }

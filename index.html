@@ -1,122 +1,263 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <title>Rock Paper Scissors AI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Batu Gunting Kertas</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
       padding: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #74ebd5, #ACB6E5);
+      background: radial-gradient(circle at center, #003d99 0%, #001a33 100%);
+      min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      color: #fff;
+      font-family: sans-serif;
     }
 
- .container {
-  background: linear-gradient(145deg, rgba(30, 30, 60, 0.6), rgba(50, 50, 80, 0.6));
-  backdrop-filter: blur(10px);
-  border-radius: 20px;
-  padding: 40px;
-  width: 90%;
-  max-width: 600px;
-  text-align: center;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-}
+    .game-area {
+      text-align: center;
+      width: 100%;
+      max-width: 600px;
+      padding: 20px;
+    }
 
     h1 {
-      font-size: 32px;
-      margin-bottom: 20px;
       color: #fff;
+      margin-bottom: 10px;
+      font-size: 2rem;
     }
 
-    .btn-group {
-      margin: 20px 0;
-    }
-
-    button {
-      padding: 15px 25px;
-      font-size: 18px;
-      margin: 10px;
-      cursor: pointer;
-      border: none;
-      border-radius: 12px;
-      background-color: rgba(255, 255, 255, 0.2);
+    h2 {
       color: #fff;
-      transition: 0.3s;
+      margin-top: 0;
+      font-size: 1.2rem;
     }
 
-    button:hover {
-      background-color: rgba(255, 255, 255, 0.4);
-      transform: scale(1.05);
-    }
-
-    .fight-scene {
+    .hands {
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
-      margin-top: 30px;
-      font-size: 50px;
-      min-height: 80px;
-      transition: 0.3s;
+      margin: 20px 0;
+      gap: 60px;
     }
 
-    .choice {
-      flex: 1;
-      text-align: center;
-      transform: scale(0.8);
-      transition: transform 0.3s ease;
+    .hand {
+      width: 80px;
     }
 
-    .choice.animate {
-      transform: scale(1.2);
+    .user-hand {
+      transform: scaleX(1);
     }
 
-    #result {
+    .ai-hand {
+      transform: scaleX(-1);
+    }
+
+    .skor {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-bottom: 20px;
+      font-size: 1rem;
+      color: white;
+      flex-wrap: wrap;
+    }
+
+    .opsi {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .opsi button {
+      background-color: #ffa500;
+      border: none;
+      border-radius: 10px;
+      padding: 10px;
+      cursor: pointer;
+      transition: transform 0.2s;
+      width: 80px;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .opsi button:hover {
+      transform: scale(1.1);
+    }
+
+    .opsi img {
+      width: 50px;
+    }
+
+    .hasil {
       margin-top: 20px;
-      font-size: 22px;
-      font-weight: bold;
+      font-size: 1.1rem;
+      color: #fff;
     }
 
-    #scoreboard {
-      margin-top: 10px;
-      font-size: 18px;
+    @keyframes shake-left {
+      0%, 100% { transform: scaleX(1) rotate(0deg); }
+      25% { transform: scaleX(1) rotate(10deg); }
+      50% { transform: scaleX(1) rotate(-10deg); }
+      75% { transform: scaleX(1) rotate(10deg); }
     }
 
-    footer {
-      margin-top: 30px;
-      font-size: 14px;
-      opacity: 0.6;
+    @keyframes shake-right {
+      0%, 100% { transform: scaleX(-1) rotate(0deg); }
+      25% { transform: scaleX(-1) rotate(-10deg); }
+      50% { transform: scaleX(-1) rotate(10deg); }
+      75% { transform: scaleX(-1) rotate(-10deg); }
+    }
+
+    .shake-left {
+      animation: shake-left 0.5s ease;
+    }
+
+    .shake-right {
+      animation: shake-right 0.5s ease;
+    }
+
+    @media (max-width: 480px) {
+      .hand {
+        width: 60px;
+      }
+
+      .opsi img {
+        width: 40px;
+      }
+
+      .skor {
+        font-size: 0.9rem;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+      }
+
+      h2 {
+        font-size: 1rem;
+      }
+
+      .hasil {
+        font-size: 1rem;
+      }
     }
   </style>
 </head>
 <body>
 
-  <div class="container">
-    <h1>🧠 Rock Paper Scissors vs AI</h1>
+  <div class="game-area">
+    <h1>BATU GUNTING KERTAS</h1>
+    <h2>Manusia vs Komputer</h2>
 
-    <div class="btn-group">
-      <button onclick="play('rock')">🪨 Rock</button>
-      <button onclick="play('paper')">📄 Paper</button>
-      <button onclick="play('scissors')">✂️ Scissors</button>
+    <div class="hands">
+      <img id="left-hand" src="batu.png" alt="Tangan Manusia" class="hand user-hand">
+      <img id="right-hand" src="batu.png" alt="Tangan Komputer" class="hand ai-hand">
     </div>
 
-    <div class="fight-scene">
-      <div id="user-choice" class="choice">🙂</div>
-      <div id="ai-choice" class="choice">🤖</div>
+    <div class="skor">
+      <div>Manusia: <span id="user-score">0</span></div>
+      <div>Komputer: <span id="ai-score">0</span></div>
+      <div>Seri: <span id="draw-score">0</span></div>
     </div>
 
-    <div id="result">Mulai suit yuk!</div>
-    <div id="scoreboard">You: 0 | AI: 0 | Draw: 0</div>
+    <div class="opsi">
+      <button onclick="play('rock')"><img src="batu.png" alt="Batu"></button>
+      <button onclick="play('paper')"><img src="kertas.png" alt="Kertas"></button>
+      <button onclick="play('scissors')"><img src="gunting.png" alt="Gunting"></button>
+    </div>
 
-    <footer>
-      Made with 🤖 by Aden | Simple AI Pattern Learning
-    </footer>
+    <div class="hasil" id="result">Mulai suit yuk!</div>
   </div>
 
-  <script src="script.js"></script>
+  <script>
+    let history = { rock: 0, paper: 0, scissors: 0 };
+    let score = { user: 0, ai: 0, draw: 0 };
+
+    function play(userChoice) {
+      animateHands();
+
+      setTimeout(() => {
+        updateHistory(userChoice);
+        const aiChoice = predictUserMove();
+        const result = tentukanPemenang(userChoice, aiChoice);
+
+        updateHands(userChoice, aiChoice);
+
+        if (result === "Menang!") score.user++;
+        else if (result === "Kalah!") score.ai++;
+        else score.draw++;
+
+        tampilkanHasil(result);
+      }, 500);
+    }
+
+    function updateHistory(choice) {
+      history[choice]++;
+    }
+
+    function predictUserMove() {
+      const max = Math.max(history.rock, history.paper, history.scissors);
+      if (max === 0) return acak();
+      if (history.rock === max) return "paper";
+      if (history.paper === max) return "scissors";
+      return "rock";
+    }
+
+    function acak() {
+      const opsi = ["rock", "paper", "scissors"];
+      return opsi[Math.floor(Math.random() * 3)];
+    }
+
+    function tentukanPemenang(user, ai) {
+      if (user === ai) return "Seri!";
+      if (
+        (user === "rock" && ai === "scissors") ||
+        (user === "paper" && ai === "rock") ||
+        (user === "scissors" && ai === "paper")
+      ) return "Menang!";
+      return "Kalah!";
+    }
+
+    function updateHands(user, ai) {
+      document.getElementById('left-hand').src = getImage(user);
+      document.getElementById('right-hand').src = getImage(ai);
+    }
+
+    function tampilkanHasil(teks) {
+      document.getElementById("result").innerText = teks;
+      document.getElementById("user-score").innerText = score.user;
+      document.getElementById("ai-score").innerText = score.ai;
+      document.getElementById("draw-score").innerText = score.draw;
+    }
+
+    function getImage(pilihan) {
+      if (pilihan === "rock") return "batu.png";
+      if (pilihan === "paper") return "kertas.png";
+      return "gunting.png";
+    }
+
+    function animateHands() {
+      const left = document.getElementById('left-hand');
+      const right = document.getElementById('right-hand');
+
+      left.classList.add('shake-left');
+      right.classList.add('shake-right');
+
+      setTimeout(() => {
+        left.classList.remove('shake-left');
+        right.classList.remove('shake-right');
+      }, 500);
+    }
+  </script>
 </body>
 </html>
