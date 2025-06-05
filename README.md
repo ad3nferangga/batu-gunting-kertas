@@ -34,7 +34,7 @@ Meskipun tidak menggunakan *machine learning* kompleks atau model yang dilatih, 
 ---
 
 ## Tampilan Game Batu Gunting Kertas
-img/![Screenshot 2025-06-05 181609](https://github.com/user-attachments/assets/bdd176a1-26d3-44c6-b364-2e7ac85f2090)
+![Screenshot 2025-06-05 181609](https://github.com/user-attachments/assets/bdd176a1-26d3-44c6-b364-2e7ac85f2090)
 
 
 
